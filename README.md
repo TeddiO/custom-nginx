@@ -1,3 +1,4 @@
+![build-master](https://github.com/TeddiO/custom-nginx/workflows/build-master/badge.svg?branch=master)
 # About
 Builds a version of nginx complete with the [ngx_http_substitutions](https://github.com/yaoweibin/ngx_http_substitutions_filter_module) module and the [ngx_headers_more](https://github.com/openresty/headers-more-nginx-module) module, alongside setting groups for HTTP purposes.
 
