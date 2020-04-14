@@ -1,0 +1,20 @@
+name: build-merge
+
+on:
+  pull_request:
+
+jobs:
+  test_build_job:
+    name: "Test the build!"
+    runs-on: ubuntu-latest
+      
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Build container
+      run: |
+        repo=${{ github.repository }}
+        repo=${repo,,}
+
+        docker build . -t docker.pkg.github.com/$repo/custom-nginx:${GITHUB_SHA::8}
+        

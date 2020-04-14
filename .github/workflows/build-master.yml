@@ -1,0 +1,24 @@
+name: build-master
+
+on:
+  push:
+    branches: 
+      - master
+jobs:
+  build:
+    name: "Build & Release container"
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Build container & Deploy
+      run: |
+        repo=${{ github.repository }}
+        repo=${repo,,}
+
+        docker build . -t docker.pkg.github.com/$repo/custom-nginx:master
+        docker login http://docker.pkg.github.com/ -u ${{ github.actor }} -p ${{ secrets.GITHUB_TOKEN }}
+        docker push docker.pkg.github.com/$repo/custom-nginx:master
+        
+
