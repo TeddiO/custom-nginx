@@ -1,25 +1,27 @@
-FROM alpine
+FROM alpine as build
 
 ARG version=1.16.1
-ARG unixgroup=1000
+ARG opensslversion=1.1.1g
+ARG zlibversion=1.2.11
 
-RUN apk add --no-cache unzip bash gcc make pcre build-base pcre-dev openssl openssl-dev zlib zlib-dev
-
-RUN addgroup -g ${unixgroup} -S www-data \
-	&& adduser -u ${unixgroup} -D -S -G www-data www-data
+RUN apk add --no-cache unzip bash gcc make pcre build-base pcre-dev perl-dev linux-headers
 
 RUN wget https://nginx.org/download/nginx-${version}.tar.gz && \
     tar -xf nginx-${version}.tar.gz && \
-    rm nginx-${version}.tar.gz && \
     wget https://github.com/yaoweibin/ngx_http_substitutions_filter_module/archive/master.zip -O subs.zip && \
-	unzip subs.zip && \
-	rm subs.zip && \
+    unzip subs.zip && \
     wget https://github.com/openresty/headers-more-nginx-module/archive/master.zip && \
     unzip master.zip && \
-    rm master.zip
+    wget https://www.openssl.org/source/openssl-${opensslversion}.tar.gz && \
+    tar -xf openssl-${opensslversion}.tar.gz && \
+    wget https://www.zlib.net/zlib-${zlibversion}.tar.gz && \
+    tar -xf zlib-${zlibversion}.tar.gz 
 
-WORKDIR nginx-${version}
-RUN ./configure --add-module=/ngx_http_substitutions_filter_module-master \
+WORKDIR /nginx-${version}
+RUN ./configure --with-cc-opt="-static -static-libgcc" \ 
+    --with-ld-opt="-static" \
+    --with-zlib=../zlib-${zlibversion} \
+    --add-module=/ngx_http_substitutions_filter_module-master \
     --add-module=/headers-more-nginx-module-master \
     --prefix=/usr/share/nginx \
     --sbin-path=/usr/sbin/nginx \
@@ -43,11 +45,19 @@ RUN ./configure --add-module=/ngx_http_substitutions_filter_module-master \
     --with-stream_ssl_module \
     --with-http_auth_request_module \
     --with-http_addition_module \
-    --with-http_gzip_static_module \
-    --with-http_sub_module 
+    --with-http_sub_module \
+    --with-openssl=../openssl-${opensslversion} 
 
-RUN make install && \
-    apk del unzip gcc make build-base pcre-dev zlib zlib-dev && \
-    rm -R /headers-more-nginx-module-master /ngx_http_substitutions_filter_module-master
+RUN make install
 
-CMD ["nginx", "-g" ,"daemon off;"]
+FROM scratch
+
+COPY --from=build /usr/sbin/nginx . 
+COPY --from=build /usr/share/nginx /usr/share/nginx
+COPY etc /etc
+# These are just some minor hacks
+COPY .empty /usr/share/
+COPY .empty /var/run/
+COPY .empty /var/lock/
+
+ENTRYPOINT ["./nginx", "-g" ,"daemon off;"]
