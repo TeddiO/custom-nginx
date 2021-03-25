@@ -16,6 +16,6 @@ jobs:
         repo=${{ github.repository }}
         repo=${repo,,}
 
-        docker build . -t ghcr.io/teddio/static-nginx:${GITHUB_SHA::8}
+        docker build . -t ghcr.io/${{ github.repository_owner }}/static-nginx:${GITHUB_SHA::8}
 
         
