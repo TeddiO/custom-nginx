@@ -19,6 +19,6 @@ jobs:
         repo_owner=${{ github.repository }}
         repo_owner=${repo_owner,,}
 
-        docker build . -e version=${{matrix.version}} -t ghcr.io/$repo_owner/static-nginx-${{matrix.version}}:${GITHUB_SHA::8}
+        docker build --build-arg version=${{matrix.version}} . -t ghcr.io/$repo_owner/static-nginx-${{matrix.version}}:${GITHUB_SHA::8}
 
           
