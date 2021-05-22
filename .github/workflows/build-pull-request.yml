@@ -2,6 +2,8 @@ name: Build Tests
 
 on:
   pull_request:
+    branches-ignore: 
+      - master
 
 jobs:
   test_build_job:
