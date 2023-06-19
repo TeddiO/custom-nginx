@@ -4,6 +4,12 @@ on:
   push:
     branches: 
       - master
+
+concurrency:
+  group: main
+  cancel-in-progress: true
+
+  
 jobs:
   build:
     name: "Build & Release container"
