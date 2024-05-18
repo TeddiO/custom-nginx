@@ -27,7 +27,7 @@ jobs:
 
         BUILDSTRING=static-nginx-${{matrix.version}}:master
 
-        docker build . -t ghcr.io/$repo_owner/$BUILDSTRING
+        docker build . -t ghcr.io/$repo_owner/$BUILDSTRING --build-arg version=${{matrix.version}}
         echo ${{ secrets.GITHUB_TOKEN }} | docker login ghcr.io -u ${{ github.repository_owner }} --password-stdin
         docker push ghcr.io/$repo_owner/$BUILDSTRING
         
