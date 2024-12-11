@@ -20,5 +20,6 @@ jobs:
         repo_owner=${repo_owner,,}
 
         docker build --build-arg version=${{matrix.version}} . -t ghcr.io/$repo_owner/static-nginx-${{matrix.version}}:${GITHUB_SHA::8}
-
+        echo ${{ secrets.GITHUB_TOKEN }} | docker login ghcr.io -u ${{ github.repository_owner }} --password-stdin
+        docker push ghcr.io/$repo_owner/${GITHUB_SHA::8}
           

@@ -8,10 +8,10 @@ RUN apk add --no-cache unzip bash gcc make pcre build-base pcre-dev perl-dev lin
 
 RUN wget https://nginx.org/download/nginx-${version}.tar.gz && \
     tar -xf nginx-${version}.tar.gz && \
-    wget https://github.com/yaoweibin/ngx_http_substitutions_filter_module/archive/master.zip -O subs.zip && \
-    unzip subs.zip && \
-    wget https://github.com/openresty/headers-more-nginx-module/archive/master.zip && \
-    unzip master.zip && \
+    # wget https://github.com/yaoweibin/ngx_http_substitutions_filter_module/archive/master.zip -O subs.zip && \
+    # unzip subs.zip && \
+    # wget https://github.com/openresty/headers-more-nginx-module/archive/master.zip && \
+    # unzip master.zip && \
     wget https://www.openssl.org/source/openssl-${opensslversion}.tar.gz && \
     tar -xf openssl-${opensslversion}.tar.gz && \
     wget https://www.zlib.net/zlib-${zlibversion}.tar.gz && \
@@ -21,8 +21,8 @@ WORKDIR /nginx-${version}
 RUN ./configure --with-cc-opt="-static -static-libgcc" \ 
     --with-ld-opt="-static" \
     --with-zlib=../zlib-${zlibversion} \
-    --add-module=/ngx_http_substitutions_filter_module-master \
-    --add-module=/headers-more-nginx-module-master \
+    # --add-module=/ngx_http_substitutions_filter_module-master \
+    # --add-module=/headers-more-nginx-module-master \
     --prefix=/usr/share/nginx \
     --sbin-path=/usr/sbin/nginx \
     --conf-path=/etc/nginx/nginx.conf \
