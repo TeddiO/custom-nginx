@@ -1,7 +1,7 @@
-FROM alpine as build
+FROM alpine:3.21 as build
 
-ARG version=1.16.1
-ARG opensslversion=3.2.4
+ARG version=1.28.0
+ARG opensslversion=3.5.1
 ARG zlibversion=1.3.1
 
 RUN apk add --no-cache unzip bash gcc make pcre build-base pcre-dev perl-dev linux-headers
@@ -12,7 +12,7 @@ RUN wget https://nginx.org/download/nginx-${version}.tar.gz && \
     unzip subs.zip && \
     wget https://github.com/openresty/headers-more-nginx-module/archive/master.zip && \
     unzip master.zip && \
-    wget https://www.openssl.org/source/openssl-${opensslversion}.tar.gz && \
+    wget https://github.com/openssl/openssl/releases/download/openssl-${opensslversion}/openssl-${opensslversion}.tar.gz && \
     tar -xf openssl-${opensslversion}.tar.gz && \
     wget https://www.zlib.net/zlib-${zlibversion}.tar.gz && \
     tar -xf zlib-${zlibversion}.tar.gz 
