@@ -4,7 +4,7 @@ ARG version=1.28.0
 ARG opensslversion=3.5.1
 ARG zlibversion=1.3.1
 
-RUN apk add --no-cache unzip bash gcc make pcre build-base pcre-dev perl-dev linux-headers
+RUN apk add --no-cache unzip bash gcc make pcre build-base pcre pcre-dev perl-dev linux-headers
 
 RUN wget https://nginx.org/download/nginx-${version}.tar.gz && \
     tar -xf nginx-${version}.tar.gz && \
