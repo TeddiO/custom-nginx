@@ -1,6 +1,6 @@
 FROM alpine:3.21 as build
 
-ARG version=1.28.0
+ARG version=1.28.1
 ARG opensslversion=3.5.1
 ARG zlibversion=1.3.1
 
