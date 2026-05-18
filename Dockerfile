@@ -1,8 +1,8 @@
 FROM alpine:3.21 as build
 
-ARG version=1.28.1
-ARG opensslversion=3.5.4
-ARG zlibversion=1.3.1
+ARG version=1.30.1
+ARG opensslversion=3.5.6
+ARG zlibversion=1.3.2
 
 RUN apk add --no-cache unzip bash gcc make pcre build-base pcre-dev perl-dev linux-headers
 
