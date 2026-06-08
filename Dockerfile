@@ -15,8 +15,16 @@ RUN wget https://nginx.org/download/nginx-${version}.tar.gz && \
     wget https://github.com/openssl/openssl/releases/download/openssl-${opensslversion}/openssl-${opensslversion}.tar.gz && \
     tar -xf openssl-${opensslversion}.tar.gz
 
-RUN curl -fL --retry 5 --retry-delay 5 --connect-timeout 30 \
-    -A "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 Chrome/120 Safari/537.36" \
+RUN case $((RANDOM % 5)) in \
+    0) UA='Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/137.0.0.0 Safari/537.36' ;; \
+    1) UA='Mozilla/5.0 (Macintosh; Intel Mac OS X 15_5) AppleWebKit/605.1.15 Version/18.5 Safari/605.1.15' ;; \
+    2) UA='Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 Chrome/137.0.0.0 Safari/537.36' ;; \
+    3) UA='Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:140.0) Gecko/20100101 Firefox/140.0' ;; \
+    *) UA='Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:140.0) Gecko/20100101 Firefox/140.0' ;; \
+    esac && \
+    echo "Using User-Agent: $UA" && \
+    curl -fL --retry 5 --retry-delay 5 --connect-timeout 30 \
+    -A "$UA" \
     -o zlib-${zlibversion}.tar.gz \
     https://www.zlib.net/zlib-${zlibversion}.tar.gz && \
     tar -xf zlib-${zlibversion}.tar.gz
