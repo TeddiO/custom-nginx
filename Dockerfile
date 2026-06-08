@@ -13,9 +13,13 @@ RUN wget https://nginx.org/download/nginx-${version}.tar.gz && \
     wget https://github.com/openresty/headers-more-nginx-module/archive/master.zip && \
     unzip master.zip && \
     wget https://github.com/openssl/openssl/releases/download/openssl-${opensslversion}/openssl-${opensslversion}.tar.gz && \
-    tar -xf openssl-${opensslversion}.tar.gz && \
-    wget https://www.zlib.net/zlib-${zlibversion}.tar.gz && \
-    tar -xf zlib-${zlibversion}.tar.gz 
+    tar -xf openssl-${opensslversion}.tar.gz
+
+RUN wget --tries=5 --retry-connrefused --waitretry=5 --timeout=30 \
+    --user-agent="Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 Chrome/120 Safari/537.36" \
+    -O zlib-${zlibversion}.tar.gz \
+    https://www.zlib.net/zlib-${zlibversion}.tar.gz && \
+    tar -xf zlib-${zlibversion}.tar.gz
 
 WORKDIR /nginx-${version}
 RUN ./configure --with-cc-opt="-static -static-libgcc" \ 
