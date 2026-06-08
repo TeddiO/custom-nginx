@@ -1,10 +1,10 @@
-FROM alpine:3.21 as build
+FROM alpine:3.23 AS build
 
 ARG version=1.30.2
 ARG opensslversion=3.5.6
 ARG zlibversion=1.3.2
 
-RUN apk add --no-cache unzip bash gcc make pcre build-base pcre-dev perl-dev linux-headers
+RUN apk add --no-cache unzip bash gcc make pcre build-base pcre-dev perl-dev linux-headers curl
 
 RUN wget https://nginx.org/download/nginx-${version}.tar.gz && \
     tar -xf nginx-${version}.tar.gz && \
@@ -15,9 +15,9 @@ RUN wget https://nginx.org/download/nginx-${version}.tar.gz && \
     wget https://github.com/openssl/openssl/releases/download/openssl-${opensslversion}/openssl-${opensslversion}.tar.gz && \
     tar -xf openssl-${opensslversion}.tar.gz
 
-RUN wget --tries=5 --retry-connrefused --waitretry=5 --timeout=30 \
-    --user-agent="Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 Chrome/120 Safari/537.36" \
-    -O zlib-${zlibversion}.tar.gz \
+RUN curl -fL --retry 5 --retry-delay 5 --connect-timeout 30 \
+    -A "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 Chrome/120 Safari/537.36" \
+    -o zlib-${zlibversion}.tar.gz \
     https://www.zlib.net/zlib-${zlibversion}.tar.gz && \
     tar -xf zlib-${zlibversion}.tar.gz
 
