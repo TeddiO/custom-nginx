@@ -4,7 +4,7 @@ ARG version=1.30.2
 ARG opensslversion=3.5.6
 ARG zlibversion=1.3.2
 
-RUN apk add --no-cache unzip bash gcc make pcre2 build-base pcre2-dev  pcre2-static perl-dev linux-headers curl
+RUN apk add --no-cache unzip bash gcc make pcre2 build-base pcre2-dev pcre2-static perl-dev linux-headers curl
 
 RUN wget https://nginx.org/download/nginx-${version}.tar.gz && \
     tar -xf nginx-${version}.tar.gz && \
@@ -15,6 +15,7 @@ RUN wget https://nginx.org/download/nginx-${version}.tar.gz && \
     wget https://github.com/openssl/openssl/releases/download/openssl-${opensslversion}/openssl-${opensslversion}.tar.gz && \
     tar -xf openssl-${opensslversion}.tar.gz
 
+# Do this to deal with ZLib randomly giving us a 415 response, which seems to be some sort of jank rate limiting on their end.
 RUN case $((RANDOM % 5)) in \
     0) UA='Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/137.0.0.0 Safari/537.36' ;; \
     1) UA='Mozilla/5.0 (Macintosh; Intel Mac OS X 15_5) AppleWebKit/605.1.15 Version/18.5 Safari/605.1.15' ;; \
