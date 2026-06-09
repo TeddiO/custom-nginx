@@ -18,7 +18,12 @@ RUN wget https://nginx.org/download/nginx-${version}.tar.gz && \
     tar -xf zlib-${zlibversion}.tar.gz
 
 WORKDIR /nginx-${version}
-RUN ./configure --with-cc-opt="-static -static-libgcc" \ 
+
+RUN extra_cc_opt=""; \
+    if [ "$(printf '%s\n' "$version" "1.28.3" | sort -V | head -n1)" = "$version" ] && [ "$version" != "1.28.3" ]; then \
+        extra_cc_opt="-Wno-error=unterminated-string-initialization"; \
+    fi; \
+    ./configure --with-cc-opt="-static -static-libgcc ${extra_cc_opt}" \
     --with-ld-opt="-static" \
     --with-zlib=../zlib-${zlibversion} \
     --add-module=/ngx_http_substitutions_filter_module-master \
@@ -46,7 +51,7 @@ RUN ./configure --with-cc-opt="-static -static-libgcc" \
     --with-http_auth_request_module \
     --with-http_addition_module \
     --with-http_sub_module \
-    --with-openssl=../openssl-${opensslversion} 
+    --with-openssl=../openssl-${opensslversion}
 
 RUN make install
 
